@@ -83,6 +83,12 @@ For a quick throwaway deployment without creating accounts:
 ### Alternative local servers
 
 If you already have a favorite static server, you can serve the root directory however you like (for example `python -m http.server` or `npx serve .`). Just open the reported URL in a modern browser with WebGL support.
+1. Serve the project with any static file server. For example:
+   ```bash
+   npx serve .
+   ```
+2. Open the served URL (typically <http://localhost:3000>) in a modern browser with WebGL support.
+3. Upload an MP3 file using the control panel and adjust the sliders to tune the simulation.
 
 > **Tip:** Higher particle counts are visually rich but require more GPU power. Reduce the particle count if you notice performance issues.
 
