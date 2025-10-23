@@ -36,11 +36,15 @@ const params = {
 const audioUpload = document.getElementById('audio-upload');
 const audioElement = document.getElementById('audio-player');
 const statusMessage = document.getElementById('status-message');
+const youtubeUrlInput = document.getElementById('youtube-url');
+const youtubeLoadBtn = document.getElementById('youtube-load');
 
 audioElement.controls = true;
 audioElement.preload = 'auto';
+audioElement.crossOrigin = 'anonymous';
 
 audioUpload.addEventListener('change', handleAudioUpload);
+youtubeLoadBtn.addEventListener('click', handleYouTubeLoad);
 
 audioElement.addEventListener('play', () => {
   if (audioContext && audioContext.state === 'suspended') {
@@ -363,4 +367,99 @@ function onWindowResize() {
 
 function setStatus(message) {
   statusMessage.textContent = message;
+}
+
+async function handleYouTubeLoad() {
+  const url = youtubeUrlInput.value.trim();
+
+  if (!url) {
+    setStatus('Please enter a YouTube URL.');
+    return;
+  }
+
+  const videoId = extractYouTubeVideoId(url);
+  if (!videoId) {
+    setStatus('Invalid YouTube URL. Please check and try again.');
+    return;
+  }
+
+  youtubeLoadBtn.disabled = true;
+  setStatus('Fetching audio from YouTube...');
+
+  try {
+    const apiUrl = `https://yt-dlp-api.fly.dev/api/info?url=https://www.youtube.com/watch?v=${videoId}`;
+    const response = await fetch(apiUrl);
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch video information');
+    }
+
+    const data = await response.json();
+
+    const audioFormat = data.formats?.find(
+      (f) => f.acodec !== 'none' && f.vcodec === 'none'
+    ) || data.formats?.find((f) => f.acodec !== 'none');
+
+    if (!audioFormat || !audioFormat.url) {
+      throw new Error('No audio stream found for this video');
+    }
+
+    try {
+      initialiseAudioGraph();
+    } catch (error) {
+      console.error('Audio initialisation failed', error);
+      setStatus('Unable to initialise audio. Please try a different browser or reload the page.');
+      youtubeLoadBtn.disabled = false;
+      return;
+    }
+
+    if (audioContext?.state === 'suspended') {
+      audioContext.resume().catch(() => {});
+    }
+
+    if (currentObjectUrl) {
+      URL.revokeObjectURL(currentObjectUrl);
+      currentObjectUrl = null;
+    }
+
+    audioElement.src = audioFormat.url;
+    audioElement.load();
+    lastUploadedFileName = data.title || 'YouTube Audio';
+    setStatus('Loading audio from YouTube...');
+
+    audioElement
+      .play()
+      .then(() => {
+        setStatus(`Playing: ${lastUploadedFileName}`);
+        youtubeUrlInput.value = '';
+      })
+      .catch(() => {
+        setStatus('Press play on the audio controls to begin the simulation.');
+      })
+      .finally(() => {
+        youtubeLoadBtn.disabled = false;
+      });
+
+  } catch (error) {
+    console.error('YouTube load error:', error);
+    setStatus(`Error: ${error.message || 'Unable to load YouTube audio. Please try another video.'}`);
+    youtubeLoadBtn.disabled = false;
+  }
+}
+
+function extractYouTubeVideoId(url) {
+  const patterns = [
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/,
+    /youtube\.com\/embed\/([^&\n?#]+)/,
+    /youtube\.com\/v\/([^&\n?#]+)/,
+  ];
+
+  for (const pattern of patterns) {
+    const match = url.match(pattern);
+    if (match && match[1]) {
+      return match[1];
+    }
+  }
+
+  return null;
 }

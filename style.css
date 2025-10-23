@@ -65,6 +65,66 @@ body {
   color: rgba(230, 235, 255, 0.85);
 }
 
+.divider {
+  text-align: center;
+  font-size: 0.75rem;
+  color: rgba(230, 235, 255, 0.5);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  margin: 0.5rem 0;
+}
+
+.youtube-input-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+#youtube-url {
+  flex: 1;
+  padding: 0.5rem;
+  background: rgba(20, 25, 40, 0.8);
+  border: 1px solid rgba(84, 104, 255, 0.25);
+  border-radius: 0.375rem;
+  color: #f4f6ff;
+  font-size: 0.85rem;
+  font-family: inherit;
+}
+
+#youtube-url::placeholder {
+  color: rgba(230, 235, 255, 0.4);
+}
+
+#youtube-url:focus {
+  outline: none;
+  border-color: rgba(84, 104, 255, 0.6);
+}
+
+#youtube-load {
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, #5468ff 0%, #4052cc 100%);
+  border: none;
+  border-radius: 0.375rem;
+  color: #ffffff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+#youtube-load:hover {
+  background: linear-gradient(135deg, #6478ff 0%, #5062dc 100%);
+  transform: translateY(-1px);
+}
+
+#youtube-load:active {
+  transform: translateY(0);
+}
+
+#youtube-load:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 @media (max-width: 600px) {
   .ui-panel {
     left: 50%;
