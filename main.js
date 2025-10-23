@@ -1,5 +1,4 @@
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.158/build/three.module.js';
-import { GUI } from 'https://cdn.jsdelivr.net/npm/dat.gui@0.7.9/build/dat.gui.module.js';
+import * as THREE from 'three';
 
 const canvas = document.getElementById('scene');
 const renderer = new THREE.WebGLRenderer({
@@ -33,49 +32,6 @@ const params = {
   audioSensitivity: 3.0,
   particleCount: 8000,
 };
-
-const gui = new GUI({ width: 320 });
-const guiContainer = gui.domElement;
-guiContainer.style.zIndex = '3';
-guiContainer.style.position = 'absolute';
-guiContainer.style.top = '1rem';
-guiContainer.style.right = '1rem';
-
-gui
-  .add(params, 'speed', 0.1, 5, 0.05)
-  .name('Particle Speed')
-  .domElement.setAttribute('title', 'Controls how quickly particles traverse the scene.');
-
-gui
-  .add(params, 'velocity', 0.1, 10, 0.1)
-  .name('Velocity')
-  .domElement.setAttribute('title', 'Scales the intensity of particle motion.');
-
-gui
-  .add(params, 'scale', 0.1, 5, 0.05)
-  .name('Particle Scale')
-  .onChange((value) => {
-    if (particleMaterial) {
-      particleMaterial.size = value;
-    }
-  })
-  .domElement.setAttribute('title', 'Base size for the point sprites.');
-
-gui
-  .add(params, 'colorSensitivity', 0.1, 5, 0.05)
-  .name('Color Sensitivity')
-  .domElement.setAttribute('title', 'Higher values amplify color reactions to different frequencies.');
-
-gui
-  .add(params, 'audioSensitivity', 0.1, 10, 0.1)
-  .name('Audio Sensitivity')
-  .domElement.setAttribute('title', 'Multiplies the impact of overall audio intensity on the system.');
-
-gui
-  .add(params, 'particleCount', 1000, 50000, 1000)
-  .name('Particle Count')
-  .onFinishChange((value) => createParticleSystem(Math.floor(value)))
-  .domElement.setAttribute('title', 'Adjust for performance vs. fidelity. Rebuilds the system.');
 
 const audioUpload = document.getElementById('audio-upload');
 const audioElement = document.getElementById('audio-player');
