@@ -1,0 +1,11 @@
+tasks:
+  - name: Serve preview
+    init: |
+      echo "Gitpod workspace ready."
+    command: |
+      python3 -m http.server 4173
+ports:
+  - port: 4173
+    onOpen: open-preview
+    visibility: public
+    description: Audio reactive particle simulation
