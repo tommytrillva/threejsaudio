@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Three.js Audio Reactive Particles</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main id="app">
+      <canvas id="scene" aria-label="Audio reactive particle simulation"></canvas>
+      <div class="ui-panel" role="region" aria-live="polite">
+        <label for="audio-upload" title="Upload an MP3 file to drive the particle simulation">
+          Upload MP3
+        </label>
+        <input id="audio-upload" type="file" accept="audio/mpeg,audio/mp3" />
+        <audio id="audio-player" controls title="Audio playback controls" aria-label="Audio playback"></audio>
+        <p id="status-message">Upload an MP3 track to begin.</p>
+      </div>
+    </main>
+    <script type="module" src="main.js"></script>
+  </body>
+</html>
